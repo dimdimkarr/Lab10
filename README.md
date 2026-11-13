@@ -14,9 +14,9 @@ x · e^(sin(x²)).
 
 Задание 2  
 Вычислить значение заданной функции тремя способами:  
-1. С помощью стандартной библиотечной функции.  
-2. С помощью собственной функции с заданным количеством членов ряда N.  
-3. С помощью собственной функции с заданной точностью eps.  
+* с использованием стандартной функции asin();  
+* с использованием разложения в ряд при заданном количестве членов;  
+* с использованием разложения в ряд с заданной точностью.  
 Вариант 6 — arcsin(x).  
 
 ## Реализация программы
@@ -26,9 +26,11 @@ x · e^(sin(x²)).
 #include <math.h>
 #include <locale.h>
 
-// Задание 1
 double fa(double x);
 double fb(double x);
+double product(double a, double b);
+double diff_squares(double a, double b);
+double double_sum(double a, double b);
 double arcsin_n(double x, int N);
 double arcsin_eps(double x, double eps);
 
@@ -44,16 +46,21 @@ int main(void)
     // Задание 1
     printf("=== Задание 1 ===\n");
     printf("Введите значение x: ");
-    scanf("%lf", &x);
+
+    if (scanf("%lf", &x) != 1)
+    {
+        printf("Ошибка ввода.\n");
+        return 1;
+    }
 
     f1 = fa(x);
     f2 = fb(x);
 
     printf("\nF1(x) = %.6lf\n", f1);
     printf("F2(x) = %.6lf\n", f2);
-    printf("Произведение = %.6lf\n", f1 * f2);
-    printf("Разность квадратов = %.6lf\n", f1 * f1 - f2 * f2);
-    printf("Удвоенная сумма = %.6lf\n", 2 * (f1 + f2));
+    printf("Произведение = %.6lf\n", product(f1, f2));
+    printf("Разность квадратов = %.6lf\n", diff_squares(f1, f2));
+    printf("Удвоенная сумма = %.6lf\n", double_sum(f1, f2));
 
     do
     {
@@ -66,12 +73,22 @@ int main(void)
         printf("6 - Ввести новое значение x\n");
         printf("0 - Выход из меню\n");
         printf("Ваш выбор: ");
-        scanf("%d", &choice);
+
+        if (scanf("%d", &choice) != 1)
+        {
+            printf("Ошибка ввода.\n");
+            return 1;
+        }
 
         if (choice == 6)
         {
             printf("Введите новое значение x: ");
-            scanf("%lf", &x);
+
+            if (scanf("%lf", &x) != 1)
+            {
+                printf("Ошибка ввода.\n");
+                return 1;
+            }
 
             f1 = fa(x);
             f2 = fb(x);
@@ -89,17 +106,17 @@ int main(void)
                 break;
 
             case 3:
-                result = f1 * f2;
+                result = product(f1, f2);
                 printf("Произведение = %.6lf\n", result);
                 break;
 
             case 4:
-                result = f1 * f1 - f2 * f2;
+                result = diff_squares(f1, f2);
                 printf("Разность квадратов = %.6lf\n", result);
                 break;
 
             case 5:
-                result = 2 * (f1 + f2);
+                result = double_sum(f1, f2);
                 printf("Удвоенная сумма = %.6lf\n", result);
                 break;
 
@@ -115,10 +132,15 @@ int main(void)
 
     } while (choice != 0);
 
-    // Задание 2
+    // Задание 2. Вариант 6. Арксинус
     printf("\n=== Задание 2. Арксинус ===\n");
     printf("Введите x от -1 до 1: ");
-    scanf("%lf", &x);
+
+    if (scanf("%lf", &x) != 1)
+    {
+        printf("Ошибка ввода.\n");
+        return 1;
+    }
 
     if (x < -1 || x > 1)
     {
@@ -127,10 +149,20 @@ int main(void)
     else
     {
         printf("Введите количество членов ряда N: ");
-        scanf("%d", &N);
+
+        if (scanf("%d", &N) != 1)
+        {
+            printf("Ошибка ввода.\n");
+            return 1;
+        }
 
         printf("Введите точность eps: ");
-        scanf("%lf", &eps);
+
+        if (scanf("%lf", &eps) != 1)
+        {
+            printf("Ошибка ввода.\n");
+            return 1;
+        }
 
         if (N < 1 || eps <= 0)
         {
@@ -164,6 +196,7 @@ int main(void)
     return 0;
 }
 
+// Вычисление функции F1
 double fa(double x)
 {
     double y;
@@ -176,6 +209,7 @@ double fa(double x)
     return y;
 }
 
+// Вычисление функции F2
 double fb(double x)
 {
     double y;
@@ -185,6 +219,37 @@ double fb(double x)
     return y;
 }
 
+// Вычисление произведения
+double product(double a, double b)
+{
+    double result;
+
+    result = a * b;
+
+    return result;
+}
+
+// Вычисление разности квадратов
+double diff_squares(double a, double b)
+{
+    double result;
+
+    result = a * a - b * b;
+
+    return result;
+}
+
+// Вычисление удвоенной суммы
+double double_sum(double a, double b)
+{
+    double result;
+
+    result = 2 * (a + b);
+
+    return result;
+}
+
+// Вычисление арксинуса с заданным количеством членов ряда
 double arcsin_n(double x, int N)
 {
     double sum = x;
@@ -194,7 +259,7 @@ double arcsin_n(double x, int N)
     for (n = 1; n < N; n++)
     {
         term = term * x * x * (2 * n - 1) * (2 * n - 1)
-            / (2 * n * (2 * n + 1));
+            / (2.0 * n * (2 * n + 1));
 
         sum = sum + term;
     }
@@ -202,21 +267,22 @@ double arcsin_n(double x, int N)
     return sum;
 }
 
+// Вычисление арксинуса с заданной точностью
 double arcsin_eps(double x, double eps)
 {
-    double sum = x;
+    double sum = 0;
     double term = x;
     int n = 1;
 
-    do
+    while (fabs(term) >= eps)
     {
+        sum = sum + term;
+
         term = term * x * x * (2.0 * n - 1.0) * (2.0 * n - 1.0)
             / (2.0 * n * (2.0 * n + 1.0));
 
-        sum = sum + term;
         n++;
-
-    } while (fabs(term) >= eps);
+    }
 
     return sum;
 }
@@ -257,15 +323,15 @@ eps = 0.0001
 #include <locale.h>
 #include <math.h>
 
-// Задание 3
 double area_triangle(double a);
-void draw_triangle(int a, char sym);
+char triangle_symbol(int row, int col, int a, char sym);
 
 int main(void)
 {
+    char sym, c;
     int a;
     int choice;
-    char sym;
+    int row, col;
     double s;
 
     setlocale(LC_ALL, "");
@@ -273,10 +339,20 @@ int main(void)
     printf("Фигура: равносторонний треугольник\n");
 
     printf("Введите символ для рисования: ");
-    scanf(" %c", &sym);
+
+    if (scanf(" %c", &sym) != 1)
+    {
+        printf("Ошибка ввода.\n");
+        return 1;
+    }
 
     printf("Введите сторону треугольника: ");
-    scanf("%d", &a);
+
+    if (scanf("%d", &a) != 1)
+    {
+        printf("Ошибка ввода.\n");
+        return 1;
+    }
 
     if (a < 2)
     {
@@ -292,7 +368,12 @@ int main(void)
             printf("3 - Нарисовать фигуру\n");
             printf("0 - Выход\n");
             printf("Ваш выбор: ");
-            scanf("%d", &choice);
+
+            if (scanf("%d", &choice) != 1)
+            {
+                printf("Ошибка ввода.\n");
+                return 1;
+            }
 
             switch (choice)
             {
@@ -309,7 +390,21 @@ int main(void)
                 break;
 
             case 3:
-                draw_triangle(a, sym);
+                for (row = 1; row <= a; row++)
+                {
+                    for (col = 1; col <= a - row; col++)
+                    {
+                        putchar(' ');
+                    }
+
+                    for (col = 1; col <= 2 * row - 1; col++)
+                    {
+                        c = triangle_symbol(row, col, a, sym);
+                        putchar(c);
+                    }
+
+                    printf("\n");
+                }
                 break;
 
             case 0:
@@ -327,6 +422,7 @@ int main(void)
     return 0;
 }
 
+// Вычисление площади равностороннего треугольника
 double area_triangle(double a)
 {
     double s;
@@ -336,32 +432,21 @@ double area_triangle(double a)
     return s;
 }
 
-void draw_triangle(int a, char sym)
+// Определение символа для заданной позиции
+char triangle_symbol(int row, int col, int a, char sym)
 {
-    int row, col;
+    char result;
 
-    for (row = 1; row < a; row++)
+    if (col == 1 || col == 2 * row - 1 || row == a)
     {
-        for (col = 1; col <= a - row; col++)
-            putchar(' ');
-
-        putchar(sym);
-
-        if (row > 1)
-        {
-            for (col = 1; col <= 2 * row - 3; col++)
-                putchar(' ');
-
-            putchar(sym);
-        }
-
-        printf("\n");
+        result = sym;
+    }
+    else
+    {
+        result = ' ';
     }
 
-    for (col = 1; col <= 2 * a - 1; col++)
-        putchar(sym);
-
-    printf("\n");
+    return result;
 }
 ```
 ## Пример работы программы
